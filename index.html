@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#123942">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="صلاتي">
+  <meta name="description" content="متابعة الصلوات الخمس، وأوقات أدائها، والصلوات التي تنتظر القضاء. سجل خاص محفوظ على جهازك.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>صلاتي | متابعة الصلوات الخمس</title>
+  <style>
+    :root{--ink:#16373d;--ink2:#517079;--teal:#087f6d;--mint:#e3f6ee;--paper:#f6f8f5;--white:#fff;--line:#dfeae6;--amber:#a56712;--amber-bg:#fff4db;--red:#bd4a49;--red-bg:#ffebea;--blue:#386aaf;--blue-bg:#e9f1ff;--shadow:0 12px 36px rgba(20,54,58,.075)}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html{scroll-behavior:smooth} body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.6}
+    button,input{font:inherit} button{cursor:pointer;touch-action:manipulation}
+    .app{max-width:880px;margin:auto;padding-bottom:110px}
+    .hero{padding:30px 22px 82px;background:radial-gradient(circle at 2% 10%,#21616a 0,transparent 43%),linear-gradient(115deg,#113941,#12444a 60%,#0e323b);position:relative;overflow:hidden;color:#fff;border-radius:0 0 34px 34px}
+    .hero:after{content:"✦     ·     ✧    ·     ✦";position:absolute;top:20px;left:13%;font-size:30px;color:#d5c49d;opacity:.26;letter-spacing:14px;transform:rotate(-12deg);pointer-events:none}
+    .hero-inner{max-width:720px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:16px}
+    .hero h1{margin:0;font-weight:800;font-size:clamp(28px,6vw,38px);letter-spacing:-.4px}.hero p{margin:6px 0 0;color:#c7e5df;font-size:13px;max-width:310px}
+    .moon{width:65px;height:65px;flex:0 0 65px;background:#ffffff12;border:1px solid #ffffff24;border-radius:21px;display:grid;place-items:center}
+    .content{width:min(100% - 26px,760px);margin:-56px auto 0;position:relative}
+    .month-panel{background:var(--white);border:1px solid #e5eeeb;border-radius:23px;box-shadow:var(--shadow);padding:15px 16px}
+    .month-nav{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .round-btn{background:#f2f8f5;border:1px solid var(--line);border-radius:14px;width:43px;height:43px;font-size:24px;color:#174a50;display:grid;place-items:center}
+    .round-btn:focus-visible,.status:focus-visible,.secondary:focus-visible,.tab:focus-visible{outline:3px solid #55bea5;outline-offset:2px}
+    .month-title{text-align:center;font-size:21px;font-weight:800;line-height:1.35}.month-sub{font-size:11.5px;text-align:center;color:var(--ink2);margin-top:2px}
+    .top-actions{display:flex;justify-content:space-between;align-items:center;margin-top:13px;gap:10px;border-top:1px solid var(--line);padding-top:11px}
+    .today-btn{border:0;background:transparent;color:var(--teal);font-weight:750;padding:5px}.hint{font-size:11.5px;color:var(--ink2)}
+    .summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:17px}
+    .metric{background:#fff;border:1px solid #e8efec;border-radius:17px;padding:14px 10px;min-width:0}
+    .metric .m-title{color:var(--ink2);font-size:11px;font-weight:650;white-space:nowrap}.metric .m-number{font-size:27px;font-weight:850;margin:2px 0 0;font-variant-numeric:tabular-nums;line-height:1.4}
+    .metric.green .m-number{color:var(--teal)}.metric.gold .m-number{color:var(--amber)}.metric.red .m-number{color:var(--red)}.metric.blue .m-number{color:var(--blue)}
+    .progress-card{padding:16px 18px;background:#fff;border:1px solid #e8efec;border-radius:19px;margin:12px 0;box-shadow:0 6px 20px #193b3910}
+    .progress-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;font-weight:750}.progress-top b{color:var(--teal);font-size:16px}.progress-track{height:10px;border-radius:20px;overflow:hidden;background:#e7f0eb;margin-top:10px;display:flex;direction:ltr}.progress-fill{width:0;background:linear-gradient(90deg,#62c5a2,#07846f);transition:width .3s}
+    .progress-note{font-size:11px;color:var(--ink2);margin-top:8px}
+    .alert{border:1px solid #f1e5c8;background:#fffaf1;padding:12px 15px;border-radius:16px;font-size:12px;margin:14px 0;display:none}.alert strong{color:#865a1f}.alert svg{vertical-align:middle}
+    .section-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 1px 12px}.section-top h2{margin:0;font-size:18px;font-weight:800}.small{font-size:11px;color:var(--ink2)}
+    .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:5px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab{border:1px solid #dce8e3;background:#fff;color:#4a696b;padding:9px 13px;border-radius:99px;white-space:nowrap;font-size:12px;font-weight:700}.tab.active{background:#164e50;color:#fff;border-color:#164e50}
+    .days{display:flex;flex-direction:column;gap:9px;margin-top:13px}.day{background:#fff;border:1px solid #e3ede7;border-radius:17px;overflow:hidden;box-shadow:0 4px 12px #173c3a09}.day.today{border-color:#90c9b5;box-shadow:0 0 0 2px #e0f3e9}
+    .day-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 14px;width:100%;border:0;background:transparent;color:var(--ink);text-align:right}
+    .day-meta{display:flex;align-items:center;gap:12px;min-width:0}.date-bubble{width:40px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 40px;border-radius:12px;background:#eef5f1;color:#214c4b;line-height:1.2}.date-bubble strong{font-size:18px}.date-bubble span{font-size:9px}
+    .day-name{font-size:13px;font-weight:800}.date-details{font-size:11px;color:var(--ink2);margin-top:1px}.today-flag{font-size:10px;padding:2px 7px;background:#e5f6ea;color:#14735a;border-radius:6px;margin-right:4px}
+    .day-right{text-align:left;display:flex;gap:10px;align-items:center}.dots{display:flex;gap:4px;direction:rtl}.dot{height:7px;width:7px;border-radius:50%;background:#dce7e3}.dot.onTime{background:#0b967a}.dot.late{background:#e4ac45}.dot.missed{background:#d95d59}.dot.madeup{background:#6a95df}.chevron{font-size:16px;color:#79928d;transition:transform .15s}.day.open .chevron{transform:rotate(180deg)}
+    .day-body{padding:0 12px 13px;display:none}.day.open .day-body{display:block}
+    .prayer{padding:11px 2px;border-top:1px solid #edf2ef}.prayer-line{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px}.prayer-name{font-weight:800;font-size:13px}.status-label{font-size:10.5px;color:#718a87}.status-label.onTime{color:var(--teal)}.status-label.late{color:var(--amber)}.status-label.missed{color:var(--red)}.status-label.madeup{color:var(--blue)}
+    .choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.status{padding:9px 3px;border:1px solid #dfe9e4;border-radius:10px;background:#fbfdfb;color:#647b78;font-size:11px;min-width:0;font-weight:720}.status.selected.onTime{background:#e1f6ec;border-color:#83d4ac;color:#047b5e}.status.selected.late{background:var(--amber-bg);border-color:#efd093;color:#9c650f}.status.selected.missed{background:var(--red-bg);border-color:#e7a2a0;color:#b53e3e}.status.selected.madeup{background:var(--blue-bg);border-color:#9abbea;color:#356eb1}.status.qada-disabled{opacity:.33;cursor:not-allowed}
+    .empty{border:1px dashed #c9ddd5;background:#fff;text-align:center;border-radius:16px;padding:26px 14px;color:#567770;font-size:13px}
+    .qada-panel{border-radius:19px;background:#fff;border:1px solid #e7eeea;padding:15px;margin-top:19px}.qada-panel h3{font-size:15px;margin:0 0 8px}.qada-item{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #edf1ef;padding:10px 0}.qada-item:first-of-type{border-top:0}.qada-name{font-size:12.5px;font-weight:750}.qada-date{font-size:11px;color:var(--ink2)}.qada-action{border:1px solid #a7c5e9;border-radius:10px;background:#eff5ff;color:#316bb2;padding:7px 12px;white-space:nowrap;font-size:11px;font-weight:750}
+    .foot-tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.secondary{border:1px solid #d3e1db;border-radius:12px;background:#fff;color:#345c59;padding:11px 14px;font-size:12px;font-weight:740;display:inline-flex;align-items:center;justify-content:center;gap:6px}.secondary.danger{color:#9a5753}
+    .notes{margin:17px 1px;color:#647c78;font-size:11.5px;line-height:1.95}.notes strong{color:#2b5c56}
+    .footer{text-align:center;color:#8da19b;font-size:11px;padding:18px 0 5px}
+    .toast{position:fixed;z-index:200;bottom:max(22px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(100px);background:#173d3f;color:#fff;padding:11px 18px;border-radius:14px;box-shadow:0 8px 26px #0003;font-size:12px;white-space:nowrap;opacity:0;transition:.25s;pointer-events:none}.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    @media(max-width:600px){.hero{padding:28px 24px 78px}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{padding:12px 15px}.metric .m-number{font-size:26px}.content{width:calc(100% - 22px)}.progress-card{margin-top:11px}.day-right{gap:6px}.choices{gap:4px}.status{font-size:10px;padding:9px 1px}.day-head{padding:12px}.month-title{font-size:18px}}
+    @media(max-width:360px){.choices{grid-template-columns:repeat(2,1fr)}.status{font-size:11px}.metric .m-title{font-size:10px}.dots{gap:2px}}
+    @media print{body{background:#fff}.hero{border-radius:0;padding:10px;color:var(--ink);background:#fff}.hero p{color:var(--ink2)}.moon,.round-btn,.top-actions,.tabs,.foot-tools,.footer,.qada-action,.toast{display:none!important}.content{margin:0 auto;width:100%}.day{break-inside:avoid;box-shadow:none}.day-body{display:block!important}.day-head{padding:8px}.prayer{padding:4px 0}.choices{display:none!important}.day.open .day-body{display:block}.summary{margin-top:9px}.metric{padding:6px}.notes{font-size:9px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero"><div class="hero-inner"><div><h1>صلاتي <span style="color:#a9d4bf;font-weight:400">✦</span></h1><p>خطوة صغيرة كل يوم، وأثر جميل على مدار الشهر</p></div><div class="moon" aria-hidden="true"><svg width="41" height="41" viewBox="0 0 48 48" fill="none"><path d="M33.7 7.5c-12.1 1.8-19.9 14.1-15.1 25.6 3.3 7.8 11.1 11.8 18.8 11.2-4.2 2.8-9.2 4.3-14.5 3.5C9 46.1 1.7 31.6 6.8 18.2 11.2 6.8 23.8 1.7 33.7 7.5Z" fill="#e5d5a1"/><path d="m35 17 1.2 3.7 3.8 1.3-3.8 1.2-1.2 3.8-1.3-3.8-3.7-1.2 3.7-1.3L35 17Z" fill="#e5d5a1"/></svg></div></div></header>
+    <main class="content">
+      <section class="month-panel" aria-label="اختيار الشهر">
+        <div class="month-nav"><button class="round-btn" id="prevMonth" aria-label="الشهر السابق">‹</button><div><div class="month-title" id="monthTitle"></div><div class="month-sub" id="monthSub"></div></div><button class="round-btn" id="nextMonth" aria-label="الشهر التالي">›</button></div>
+        <div class="top-actions"><span class="hint">سجلّك محفوظ محليًا على هذا الجهاز*</span><button class="today-btn" id="goToday">العودة للشهر الحالي ↖</button></div>
+      </section>
+      <section class="summary" aria-label="إحصاءات الشهر">
+        <div class="metric green"><div class="m-title">✓ في وقتها</div><div class="m-number" id="onTimeCount">٠</div></div>
+        <div class="metric gold"><div class="m-title">◷ متأخرة</div><div class="m-number" id="lateCount">٠</div></div>
+        <div class="metric red"><div class="m-title">! بانتظار القضاء</div><div class="m-number" id="missedCount">٠</div></div>
+        <div class="metric blue"><div class="m-title">↻ تم قضاؤها</div><div class="m-number" id="madeupCount">٠</div></div>
+      </section>
+      <section class="progress-card"><div class="progress-top"><span>نسبة الصلوات المسجلة في وقتها</span><b id="progressPercent">٠٪</b></div><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><div class="progress-note" id="progressNote"></div></section>
+      <div class="alert" id="warning" role="status"></div>
+      <div class="section-top"><h2>متابعة أيام الشهر</h2><span class="small" id="dayCount"></span></div>
+      <nav class="tabs" aria-label="تصفية الأيام"><button class="tab active" data-filter="all">كل الأيام</button><button class="tab" data-filter="unmarked">غير المكتملة</button><button class="tab" data-filter="late">أيام التأخير</button><button class="tab" data-filter="missed">بانتظار القضاء</button></nav>
+      <div id="days" class="days"></div>
+      <section class="qada-panel" id="qadaSection"><h3>قائمة القضاء • جميع الأشهر</h3><div class="small" id="qadaIntro">تظهر هنا الصلوات التي حددتها «فائتة»</div><div id="qadaList"></div></section>
+      <div class="section-top" style="margin-bottom:6px"><h2>نسخة احتياطية</h2></div>
+      <div class="foot-tools"><button class="secondary" id="backup">↓ حفظ نسخة احتياطية</button><button class="secondary" id="restore">↑ استعادة نسخة</button><button class="secondary" id="csv">↓ تصدير سجل الشهر</button><button class="secondary danger" id="clearMonth">مسح الشهر</button><input type="file" id="restoreFile" accept="application/json,.json" hidden></div>
+      <div class="notes"><strong>طريقة الاستخدام:</strong> اختر ✓ إذا صليت في وقتها، أو «متأخرة» إذا صليتها متأخرًا، أو «فائتة» إذا كانت عليك صلاة تحتاج قضاء. بعد قضائها اضغط «تم القضاء». الخانة الفارغة لا تُعد فائتة تلقائيًا.<p><strong>تنبيه مهم:</strong> هذا سجل متابعة شخصي، وليس إشعارًا تلقائيًا بمواعيد الصلاة. تُحفظ البيانات محليًا داخل التطبيق على هذا الجهاز ولا تُرسل إلى أي خادم. يُنصح بحفظ نسخة احتياطية دوريًا، خاصة قبل حذف التطبيق أو تغيير الجهاز.</p></div>
+      <div class="footer">نسأل الله أن يعيننا على المحافظة على الصلاة ♡</div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    (()=>{'use strict';
+      const prayers=['الفجر','الظهر','العصر','المغرب','العشاء'];
+      const options=[['onTime','✓ في وقتها'],['late','◷ متأخرة'],['missed','! فائتة'],['madeup','↻ تم القضاء']];
+      const labels={onTime:'صليتها في وقتها',late:'صليتها متأخرة',missed:'فاتتني وتنتظر القضاء',madeup:'تم قضاؤها'};
+      const storageKey='salati-monthly-tracker-v1';
+      const now=new Date();
+      let year=now.getFullYear(), month=now.getMonth(), filter='all';
+      const openDays=new Set(); let state={},storeAvailable=true,toastTimer;
+      const el=id=>document.getElementById(id);
+      const monthStr=(y,m)=>new Date(y,m,1).toLocaleDateString('ar-SA-u-ca-gregory',{month:'long',year:'numeric'});
+      const dayStr=d=>d.toLocaleDateString('ar-SA-u-ca-gregory',{weekday:'long'});
+      const num=n=>new Intl.NumberFormat('ar-SA',{useGrouping:false}).format(n);
+      const iso=(y,m,d)=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const key=(y,m,d,p)=>`${iso(y,m,d)}:${p}`;
+      const daysIn=(y,m)=>new Date(y,m+1,0).getDate();
+      try { state=JSON.parse(localStorage.getItem(storageKey)||'{}')||{}; if(typeof state!=='object'||Array.isArray(state))state={} }catch(e){state={};storeAvailable=false;}
+      function save(){try{localStorage.setItem(storageKey,JSON.stringify(state));storeAvailable=true}catch(e){storeAvailable=false} if(!storeAvailable)showToast('الحفظ في المتصفح غير متاح؛ استخدم النسخة الاحتياطية')}
+      function showToast(t){el('toast').textContent=t;el('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el('toast').classList.remove('show'),2500)}
+      function getDayStatuses(d){return prayers.map(p=>state[key(year,month,d,p)]||'')}
+      function getMonthStats(){const stats={onTime:0,late:0,missed:0,madeup:0,empty:0,total:daysIn(year,month)*5};const lates={};const qada=[];
+        for(let d=1;d<=daysIn(year,month);d++){for(const p of prayers){const s=state[key(year,month,d,p)];if(s&&Object.prototype.hasOwnProperty.call(stats,s)){stats[s]++; if(s==='late')lates[p]=(lates[p]||0)+1;if(s==='missed')qada.push({d,p})}else stats.empty++}}
+        return {stats,lates,qada};}
+      function getAllPendingQada(){
+        return Object.entries(state).filter(([k,s])=>s==='missed'&&/^\d{4}-\d{2}-\d{2}:(الفجر|الظهر|العصر|المغرب|العشاء)$/.test(k)).map(([k])=>{
+          const [ymd,p]=k.split(':');
+          const [y,m,d]=ymd.split('-').map(Number);
+          const dt=new Date(y,m-1,d);
+          return dt.getFullYear()===y&&dt.getMonth()===m-1&&dt.getDate()===d?{date:ymd,p,dt}:null;
+        }).filter(Boolean).sort((a,b)=>a.date.localeCompare(b.date));
+      }
+      function dayHtml(d){const date=new Date(year,month,d);const statuses=getDayStatuses(d);const isToday=now.getFullYear()===year&&now.getMonth()===month&&now.getDate()===d;
+        const isOpen=openDays.has(d);const done=statuses.filter(Boolean).length;
+        const rows=prayers.map((p,i)=>{const val=statuses[i],statusText=labels[val]||'لم تسجل بعد';return `<div class="prayer"><div class="prayer-line"><span class="prayer-name">${p}</span><span class="status-label ${val}">${statusText}</span></div><div class="choices" role="group" aria-label="حالة صلاة ${p}">${options.map(([s,label])=>{const disabled=s==='madeup'&&!['missed','madeup'].includes(val);return `<button class="status ${s} ${val===s?'selected':''} ${disabled?'qada-disabled':''}" data-day="${d}" data-prayer="${p}" data-status="${s}" aria-pressed="${val===s}" ${disabled?'disabled title="سجّلها فائتة أولاً"':''}>${label}</button>`}).join('')}</div></div>`}).join('');
+        return `<article class="day ${isToday?'today':''} ${isOpen?'open':''}" data-day="${d}"><button class="day-head" data-toggle="${d}" aria-expanded="${isOpen}"><span class="day-meta"><span class="date-bubble"><strong>${num(d)}</strong><span>${date.toLocaleDateString('ar-SA-u-ca-gregory',{month:'short'})}</span></span><span><span class="day-name">${dayStr(date)} ${isToday?'<span class="today-flag">اليوم</span>':''}</span><div class="date-details">${num(done)} من ٥ صلوات مسجلة</div></span></span><span class="day-right"><span class="dots" aria-label="مؤشرات حالة الصلوات">${statuses.map(s=>`<span class="dot ${s}"></span>`).join('')}</span><span class="chevron">⌄</span></span></button><div class="day-body">${rows}</div></article>`;}
+      function render(){const count=daysIn(year,month),{stats,lates}=getMonthStats(),qada=getAllPendingQada();el('monthTitle').textContent=monthStr(year,month);el('monthSub').textContent=`${num(count)} يومًا • ${num(count*5)} صلاة`;
+        const ids={onTime:'onTimeCount',late:'lateCount',missed:'missedCount',madeup:'madeupCount'};Object.entries(ids).forEach(([s,id])=>el(id).textContent=num(stats[s]));
+        const pct=Math.round(100*stats.onTime/stats.total);el('progressPercent').textContent=num(pct)+'٪';el('progressFill').style.width=pct+'%';el('progressNote').textContent=`${num(stats.onTime)} من أصل ${num(stats.total)} صلاة في الشهر • ${num(stats.empty)} خانة لم تُسجّل بعد`;
+        const warn=el('warning');const top=Object.entries(lates).sort((a,b)=>b[1]-a[1])[0];
+        if(stats.missed||top){warn.style.display='block';warn.innerHTML=`<strong>تذكير لطيف:</strong> ${stats.missed?`لديك ${num(stats.missed)} صلاة مسجلة فائتة وتنتظر القضاء.`:''} ${top?`أكثر صلاة سجلت لها تأخيرًا هذا الشهر: <strong>${top[0]}</strong> (${num(top[1])} مرات). اجعلها أولوية في الأيام القادمة.`:''}`;}
+        else warn.style.display='none';
+        let ds=[];for(let d=1;d<=count;d++){const s=getDayStatuses(d);if(filter==='unmarked'&&!s.some(x=>!x))continue;if(filter==='late'&&!s.includes('late'))continue;if(filter==='missed'&&!s.includes('missed'))continue;ds.push(d)}
+        el('dayCount').textContent=num(ds.length)+' يوم';el('days').innerHTML=ds.length?ds.map(dayHtml).join(''):'<div class="empty">لا توجد أيام ضمن هذا التصنيف حاليًا ✨</div>';
+        el('qadaIntro').textContent=qada.length?`لديك ${num(qada.length)} صلاة بانتظار القضاء من جميع الأشهر`:'لا توجد صلوات معلّمة «فائتة» في سجلك.';
+        el('qadaList').innerHTML=qada.map(({date,p,dt})=>`<div class="qada-item"><span><div class="qada-name">${p}</div><div class="qada-date">${dayStr(dt)}، ${dt.toLocaleDateString('ar-SA-u-ca-gregory',{day:'numeric',month:'long',year:'numeric'})}</div></span><button class="qada-action" data-qada-date="${date}" data-qada-prayer="${p}">↻ قضيتها</button></div>`).join('');
+        document.querySelectorAll('.tab').forEach(b=>{b.classList.toggle('active',b.dataset.filter===filter);b.setAttribute('aria-pressed',String(b.dataset.filter===filter))});
+      }
+      function setStatus(d,p,s){const k=key(year,month,d,p);const old=state[k]||'';if(s==='madeup'&&!['missed','madeup'].includes(old))return;if(s===old)delete state[k];else state[k]=s;openDays.add(d);save();render()}
+      function changeMonth(step){const dt=new Date(year,month+step,1);year=dt.getFullYear();month=dt.getMonth();openDays.clear();if(year===now.getFullYear()&&month===now.getMonth())openDays.add(now.getDate());filter='all';render();window.scrollTo({top:0,behavior:'smooth'})}
+      el('prevMonth').addEventListener('click',()=>changeMonth(-1));el('nextMonth').addEventListener('click',()=>changeMonth(1));el('goToday').addEventListener('click',()=>{year=now.getFullYear();month=now.getMonth();openDays.clear();openDays.add(now.getDate());filter='all';render()});
+      document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-filter]');if(!b)return;filter=b.dataset.filter;if(filter==='missed')for(let d=1;d<=daysIn(year,month);d++)if(getDayStatuses(d).includes('missed'))openDays.add(d);render()});
+      el('days').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.toggle){const d=Number(t.dataset.toggle);openDays.has(d)?openDays.delete(d):openDays.add(d);render();return;}if(t.dataset.status)setStatus(Number(t.dataset.day),t.dataset.prayer,t.dataset.status)});
+      el('qadaList').addEventListener('click',e=>{const t=e.target.closest('[data-qada-date]');if(!t)return;const k=t.dataset.qadaDate+':'+t.dataset.qadaPrayer;if(state[k]!=='missed')return;state[k]='madeup';save();render();showToast('تم تسجيل القضاء، الحمد لله')});
+      function download(name,content,type){const blob=new Blob([content],{type});const a=document.createElement('a');const url=URL.createObjectURL(blob);a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000)}
+      el('backup').addEventListener('click',()=>{download(`صلاتي-نسخة-احتياطية-${iso(now.getFullYear(),now.getMonth(),now.getDate())}.json`,JSON.stringify({version:1,createdAt:new Date().toISOString(),records:state},null,2),'application/json;charset=utf-8');showToast('تم تجهيز النسخة الاحتياطية')});
+      el('restore').addEventListener('click',()=>el('restoreFile').click());el('restoreFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const raw=JSON.parse(await f.text());const records=raw.records; if(!records||typeof records!=='object'||Array.isArray(records))throw Error('Invalid file');const valid=['onTime','late','missed','madeup'];const cleaned={};for(const [k,v] of Object.entries(records)){if(/^\d{4}-\d{2}-\d{2}:(الفجر|الظهر|العصر|المغرب|العشاء)$/.test(k)&&valid.includes(v))cleaned[k]=v;}if(!confirm('سيتم دمج النسخة مع سجلك الحالي. هل تريد المتابعة؟'))return;state={...state,...cleaned};save();render();showToast('تم استعادة السجل بنجاح')}catch(err){alert('تعذر استعادة الملف. اختر نسخة احتياطية صحيحة من صلاتي.')}finally{e.target.value=''}});
+      el('csv').addEventListener('click',()=>{const rows=[['التاريخ','اليوم','الفجر','الظهر','العصر','المغرب','العشاء']];for(let d=1;d<=daysIn(year,month);d++){rows.push([iso(year,month,d),dayStr(new Date(year,month,d)),...getDayStatuses(d).map(s=>labels[s]||'غير محددة')])}const escaped=rows.map(row=>row.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\r\n');download(`صلاتي-${year}-${String(month+1).padStart(2,'0')}.csv`,'\uFEFF'+escaped,'text/csv;charset=utf-8');showToast('تم تجهيز ملف الشهر')});
+      el('clearMonth').addEventListener('click',()=>{if(!confirm(`هل تريد حذف سجلات ${monthStr(year,month)} فقط؟ لا يمكن التراجع دون نسخة احتياطية.`))return;for(let d=1;d<=daysIn(year,month);d++)for(const p of prayers)delete state[key(year,month,d,p)];save();render();showToast('تم مسح سجلات هذا الشهر')});
+      if(!storeAvailable)showToast('الحفظ غير مضمون في هذا المتصفح؛ خذ نسخًا احتياطية');openDays.add(now.getDate());render();
+    })();
+  </script>
+  <script>
+    if ('serviceWorker' in navigator && location.protocol === 'https:') {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
