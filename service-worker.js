@@ -1,8 +1,10 @@
 // Salati: cache only public app code and icon files. Prayer records stay in localStorage.
-const CACHE_NAME = 'salati-shell-v1';
+const CACHE_NAME = 'salati-shell-v5';
 const APP_SHELL = [
   './',
   './index.html',
+  './style.css?v=5',
+  './script.js?v=5',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
